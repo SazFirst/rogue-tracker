@@ -1,4 +1,4 @@
-import {SystemSaveData} from '../pokerogue/system/game-data';
+import {SessionSaveData} from '../pokerogue/system/game-data';
 
 const saveKey = 'x0i2O7WRiANTqPmZ';
 let currentSessionData = '';
@@ -7,7 +7,7 @@ let currentSessionData = '';
 export class LocalStorageUtils {
   static slotId = -1;
 
-  static getCurrentSessionData(localStorage: Storage): SystemSaveData {
+  static getCurrentSessionData(localStorage: Storage): SessionSaveData {
     Object.keys(localStorage).some(key => {
       if ((this.slotId > 0 && key.includes(`sessionData${this.slotId}`)) || key.includes('sessionData')) {
         const data = localStorage.getItem(key);

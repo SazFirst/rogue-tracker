@@ -273,7 +273,7 @@ export class HttpUtils {
 
   static createTopBannerDiv(): void {
     const div = document.createElement('div');
-    div.textContent = 'RogueDex is running!';
+    div.textContent = 'Rogue Tracer is running!';
     div.classList.add('text-base');
     div.classList.add('running-status');
     document.body.insertBefore(div, document.body.firstChild);

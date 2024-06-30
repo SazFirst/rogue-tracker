@@ -1,3 +1,4 @@
+import BGGetSaveDataMessage from './messaging/bg_get_save_data_message';
 import {HttpUtils} from './libs/httputils';
 import {LocalStorageUtils} from './libs/localstorageutils';
 import Message from './messaging/message';
@@ -6,7 +7,7 @@ import UpdateEnemiesDivMessage from './messaging/update_enemies_div_message';
 import {browserApi} from './libs/browser';
 
 // RogueDex is running! 렌더링
-// HttpUtils.createTopBannerDiv();
+HttpUtils.createTopBannerDiv();
 HttpUtils.createWrapperDivs();
 
 chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
@@ -53,6 +54,9 @@ if (touchControlsElement) {
           data: LocalStorageUtils.getCurrentSessionData(localStorage),
           slotId: LocalStorageUtils.slotId,
         });
+        browserApi.runtime.sendMessage(
+          new BGGetSaveDataMessage(LocalStorageUtils.getCurrentSessionData(localStorage), LocalStorageUtils.slotId)
+        );
       } else {
         if (newValue === 'SAVE_SLOT') {
           //TODO: Perhaps observe changes in local storage?

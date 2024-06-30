@@ -67,6 +67,7 @@ function appendPokemonArrayToDiv(pokemonArray: PokemonData[], arena: ArenaData, 
 
 browserApi.runtime.onMessage.addListener((request: Message) => {
   // Happens when loading a savegame or continuing an old run
+  console.log('background received message: ', request);
   if (request instanceof BGGetSaveDataMessage) {
     const savedata = request.data;
     slotId = request.slotId;

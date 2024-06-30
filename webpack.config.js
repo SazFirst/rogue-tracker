@@ -10,8 +10,10 @@ export default {
     background: './src/background.ts',
     content: './src/content.ts',
     inject: './src/inject.ts',
+    injected: './src/injected.ts',
   },
   mode: 'none',
+  devtool: 'source-map',
   optimization: {
     minimize: false,
   },
@@ -20,7 +22,7 @@ export default {
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
-        exclude: /node_modules/,
+        // exclude: /node_modules/,
       },
     ],
   },

@@ -1,8 +1,7 @@
 import BGGetSaveDataMessage from './messaging/bg_get_save_data_message';
+import {browserApi} from './libs/browser';
 
 console.log('content script start');
-
-const browserApi = window.browser ?? window.chrome;
 
 // inject injected script
 const s = document.createElement('script');
