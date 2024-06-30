@@ -4,3 +4,4 @@ nodejs-env
 python-env
 build
 .vscode
+dist
