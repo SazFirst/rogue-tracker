@@ -1,0 +1,21 @@
+{
+  "extends": "./node_modules/gts/tsconfig-google.json",
+  "files": [
+    "src/content.ts",
+    "src/background.ts",
+  ],
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "build",
+    // "baseUrl": "src",
+  },
+  "include": [
+    "./src/**/*.ts",
+    // "pokerogue/src/**/*.ts"
+    // "pokerogue/src/**/*.ts"
+    // "pokerogue/src/**/*.ts"
+  ],
+  "exclude": [
+    // "node_modules"
+  ],
+}

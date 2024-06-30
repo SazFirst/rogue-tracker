@@ -1,0 +1,54 @@
+{
+  "manifest_version": 2,
+  "name": "Rogue Dex",
+  "version": "2.8.3",
+  "permissions": [
+    "activeTab",
+    "webRequest",
+    "storage",
+    "https://pokerogue.net/*",
+    "https://api.pokerogue.net/*"
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{46029ed0-cb54-4130-8105-fcbbed40adc1}"
+    }
+  },
+  "background": {
+    "scripts": [
+      "background.js",
+      "libs/pokeapi.js",
+      "libs/pokerogueutils.js",
+      "libs/utils.js",
+      "libs/enums/Nature.js",
+      "libs/enums/Stat.js",
+      "libs/enums/WeatherType.js"
+    ],
+    "persistent": true
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://api.pokerogue.net/*", "https://pokerogue.net/*"],
+      "js" : [
+        "inject.js",
+        "libs/lodash.js",
+        "libs/localstorageutils.js",
+        "libs/httputils.js",
+        "libs/httpjsutils.js",
+        "libs/enums/Stat.js",
+        "libs/enums/Types.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": ["https://pokerogue.net/*"],
+      "js" : [
+        "content.js", 
+        "libs/crypto-js.min.js"
+      ],
+      "css": ["styles.css"]
+    }
+  ],
+  "web_accessible_resources": ["inject.js", "injected.js"]
+}

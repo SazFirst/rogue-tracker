@@ -1,0 +1,6 @@
+manifest.json
+node_modules
+nodejs-env
+python-env
+build
+.vscode
