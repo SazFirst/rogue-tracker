@@ -13,7 +13,7 @@ class PokeApi {
     this.pokemonClient = new PokemonClient();
   }
 
-  async getTypeEffectiveness(type: string): Promise<TypeRelations> {
+  public async getTypeEffectiveness(type: string): Promise<TypeRelations> {
     try {
       const response = await this.pokemonClient.getTypeByName(type);
       return response.damage_relations;
@@ -30,7 +30,7 @@ class PokeApi {
     }
   }
 
-  async getAbility(pokemonId: number, abilityIndex: number): Promise<Ability> {
+  public async getAbility(pokemonId: number, abilityIndex: number): Promise<Ability> {
     let name = 'Unknown';
     let description = 'Unknown';
     let isHidden = false;
@@ -67,7 +67,7 @@ class PokeApi {
   }
 
   // Function to get Pokémon type
-  async getPokemonType(id: number): Promise<string[]> {
+  public async getPokemonType(id: number): Promise<string[]> {
     try {
       const response = await this.pokemonClient.getPokemonById(id);
       const types = response.types.map(type => type.type.name);

@@ -8,7 +8,7 @@ export interface TypeEffectiveness {
 }
 
 async function _calculateTypesEffectiveness(types: string[]): Promise<TypeEffectiveness> {
-  const typeEffectiveness = await Promise.all(types.map(pokeApi.getTypeEffectiveness));
+  const typeEffectiveness = await Promise.all(types.map(type => pokeApi.getTypeEffectiveness(type)));
 
   const weaknesses = new Set<string>();
   const resistances = new Set<string>();
