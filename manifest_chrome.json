@@ -3,10 +3,7 @@
   "name": "Rogue Tracker",
   "version": "0.0.0",
   "permissions": ["activeTab", "webRequest"],
-  "host_permissions": [
-    "https://pokerogue.net/*",
-    "https://api.pokerogue.net/*"
-  ],
+  "host_permissions": ["https://pokerogue.net/*", "https://api.pokerogue.net/*"],
   "background": {
     "service_worker": "background.js",
     "type": "module"
@@ -20,8 +17,13 @@
     },
     {
       "matches": ["https://pokerogue.net/*"],
-      "js": ["content.js","lib/crypto-js.min.js"],
+      "js": ["content.js", "lib/crypto-js.min.js"],
       "css": ["styles.css"]
+    },
+    {
+      "matches": ["https://pokerogue.net/*"],
+      "js": ["end.js"],
+      "run_at": "document_idle"
     }
   ],
   "web_accessible_resources": [

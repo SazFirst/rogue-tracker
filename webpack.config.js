@@ -11,6 +11,7 @@ export default {
     content: './src/content.ts',
     inject: './src/inject.ts',
     injected: './src/injected.ts',
+    end: './src/end.ts',
   },
   mode: 'none',
   devtool: 'source-map',
