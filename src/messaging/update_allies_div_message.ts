@@ -1,15 +1,15 @@
-import {FrontendPokemon, FrontendWeather} from '../types/frontend';
-
+import {FrontendPokemon} from '../types/frontend';
 import Message from './message';
 import MessageId from './message_id';
+import {Weather} from '../pokerogue/data/weather';
 
 export default class UpdateAlliesDivMessage extends Message {
   type: string;
   pokemon: FrontendPokemon[];
-  weather: FrontendWeather;
+  weather?: Weather;
   slotId: number;
 
-  constructor(pokemon: FrontendPokemon[], weather: FrontendWeather, slotId: number) {
+  constructor(pokemon: FrontendPokemon[], weather: Weather, slotId: number) {
     super(MessageId.UPDATE_ALLIES_DIV);
     this.type = MessageId[MessageId.UPDATE_ALLIES_DIV];
     this.pokemon = pokemon;

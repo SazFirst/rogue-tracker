@@ -1,81 +1,44 @@
-import {FrontendPokemon, FrontendWeather} from './types/frontend';
+import {SessionSaveData, SystemSaveData} from './pokerogue/system/game-data';
 
-import ArenaData from './pokerogue/system/arena-data';
 import BGGetSaveDataMessage from './messaging/bg_get_save_data_message';
 import Message from './messaging/message';
-import {Nature} from './pokerogue/data/nature';
-import PokemonData from './pokerogue/system/pokemon-data';
-import {SaveAllData} from './types/pokerogue_api/save_all_data';
-import {Utils} from './libs/utils';
-import {WeatherType} from './pokerogue/data/weather';
+import UpdateAlliesDivMessage from './messaging/update_allies_div_message';
+import UpdateEnemiesDivMessage from './messaging/update_enemies_div_message';
 import {browserApi} from './libs/browser';
-import {natureDescription} from './libs/pokerogueutils';
-import {pokeApi} from './libs/pokeapi';
+import {convertToFrontendPokemons} from './types/frontend';
 
 // const browserApi = window.browser ?? window.chrome;
 let slotId = -1;
 
-async function updateDiv(pokemon: FrontendPokemon[], weather: FrontendWeather, message: string): Promise<void> {
-  await browserApi.tabs.query({active: true, currentWindow: true}).then(tabs => {
-    if (tabs.length > 0 && tabs[0].id) {
-      browserApi.tabs.sendMessage(tabs[0].id, {type: message, pokemon: pokemon, weather: weather, slotId: slotId});
-    }
-  });
+async function sendMessageToActiveTab(message: Message): Promise<void> {
+  console.trace('sendMessageToActiveTab 호출', message);
+
+  const tabs = await browserApi.tabs.query({active: true, currentWindow: true});
+  if (tabs.length > 0 && tabs[0].id) {
+    browserApi.tabs.sendMessage(tabs[0].id, message);
+  }
 }
 
-function sortById(a: FrontendPokemon, b: FrontendPokemon): number {
-  if (a.id > b.id) return 1;
-  else if (a.id < b.id) return -1;
-  else return 0;
-}
-
-// message can be either "UPDATE_ALLIES_DIV" or "UPDATE_ENEMIES_DIV"
-function appendPokemonArrayToDiv(pokemonArray: PokemonData[], arena: ArenaData, message: string): void {
-  const frontendPokemonArray: FrontendPokemon[] = [];
-  let itemsProcessed = 0;
-  pokemonArray.forEach((pokemon, index, array) => {
-    const pokemonId = Utils.convertPokemonId(pokemon.species);
-    let weather: FrontendWeather = {
-      type: 'Unknown',
-      turnsLeft: 0,
-    };
-    if (arena.weather && arena.weather.weatherType) {
-      weather = {
-        type: WeatherType[arena.weather.weatherType],
-        turnsLeft: arena.weather.turnsLeft || 0,
-      };
-    }
-    pokeApi.getAbility(pokemonId, pokemon.abilityIndex).then(ability => {
-      Utils.getPokemonTypeEffectiveness(pokemonId).then(typeEffectiveness => {
-        console.log('Got pokemon', pokemonId, 'ability', ability, 'type effectiveness', typeEffectiveness);
-        frontendPokemonArray.push({
-          id: pokemonId,
-          typeEffectiveness: typeEffectiveness,
-          ivs: pokemon.ivs,
-          ability: ability,
-          nature: {
-            name: Nature[pokemon.nature],
-            description: natureDescription[pokemon.nature],
-          },
-        });
-        itemsProcessed++;
-        if (itemsProcessed === array.length) updateDiv(frontendPokemonArray.sort(sortById), weather, message);
-      });
-    });
-  });
-}
-
-browserApi.runtime.onMessage.addListener((request: Message) => {
+browserApi.runtime.onMessage.addListener(async (request: Message) => {
   // Happens when loading a savegame or continuing an old run
   console.log('background received message: ', request);
   if (request instanceof BGGetSaveDataMessage) {
     const savedata = request.data;
     slotId = request.slotId;
     console.log('Received save data', savedata);
-    appendPokemonArrayToDiv(savedata.enemyParty, savedata.arena, 'UPDATE_ENEMIES_DIV');
-    appendPokemonArrayToDiv(savedata.party, savedata.arena, 'UPDATE_ALLIES_DIV');
+    const enemyParty = await convertToFrontendPokemons(savedata.enemyParty);
+    sendMessageToActiveTab(new UpdateEnemiesDivMessage(enemyParty, savedata.arena.weather, slotId));
+    const alliesParty = await convertToFrontendPokemons(savedata.party);
+    sendMessageToActiveTab(new UpdateAlliesDivMessage(alliesParty, savedata.arena.weather, slotId));
   }
 });
+
+interface SaveAllData {
+  system: SystemSaveData;
+  session: SessionSaveData;
+  sessionSlotId: number;
+  clientSessionId: string;
+}
 
 browserApi.webRequest.onBeforeRequest.addListener(
   details => {
@@ -84,8 +47,14 @@ browserApi.webRequest.onBeforeRequest.addListener(
         const saveAllData: SaveAllData = JSON.parse(new TextDecoder().decode(details.requestBody?.raw?.at(0)?.bytes));
         console.log('POST Session data:', saveAllData);
         const sessionData = saveAllData.session;
-        appendPokemonArrayToDiv(sessionData.enemyParty, sessionData.arena, 'UPDATE_ENEMIES_DIV');
-        appendPokemonArrayToDiv(sessionData.party, sessionData.arena, 'UPDATE_ALLIES_DIV');
+
+        convertToFrontendPokemons(sessionData.enemyParty).then(enemyParty => {
+          sendMessageToActiveTab(new UpdateEnemiesDivMessage(enemyParty, sessionData.arena.weather, slotId));
+        });
+
+        convertToFrontendPokemons(sessionData.party).then(alliesParty => {
+          sendMessageToActiveTab(new UpdateAlliesDivMessage(alliesParty, sessionData.arena.weather, slotId));
+        });
       } catch (e) {
         console.error('Error while intercepting web request: ', e);
       }

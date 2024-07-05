@@ -1,10 +1,11 @@
 import * as _ from 'lodash';
 
-import {FrontendPokemon, FrontendWeather} from '../types/frontend';
+import {Weather, WeatherType} from '../pokerogue/data/weather';
 
+import {FrontendPokemon} from '../types/frontend';
 import {Stat} from '../pokerogue/data/pokemon-stat';
 import {TYPES} from 'pokenode-ts';
-import {TypeEffectiveness} from './utils';
+import {TypeEffectiveness} from '../types/type_effectiveness';
 import UpdateAlliesDivMessage from '../messaging/update_allies_div_message';
 import UpdateEnemiesDivMessage from '../messaging/update_enemies_div_message';
 
@@ -61,8 +62,8 @@ function _createPokemonCardDiv(
 	      </div>
 	        
 	      ${
-          _weather.type && _weather.turnsLeft
-            ? `<div class="text-base">_weather: ${_weather.type}, Turns Left: ${_weather.turnsLeft}</div>`
+          _weather && WeatherType[_weather.weatherType] && _weather.turnsLeft
+            ? `<div class="text-base">_weather: ${WeatherType[_weather.weatherType]}, Turns Left: ${_weather.turnsLeft}</div>`
             : ''
         }
 	    </div>
@@ -84,37 +85,37 @@ function _createPokemonCardDiv(
 
 // Current values: weaknesses, resistances, immunities
 function _createTypeEffectivenessWrapper(typeEffectivenesses: TypeEffectiveness): string {
-  const weaknessContainer = [...typeEffectivenesses.weaknesses]
+  const weaknessContainer = typeEffectivenesses.immunities
     .map((value, index) => {
       const type = TYPES[value.toUpperCase() as keyof typeof TYPES];
 
       return `
       ${(index + 1) % 3 === 1 ? '<div>' : ''}
         <div class="type-icon" style="background-image: url('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-viii/sword-shield/${type}.png')"></div>
-      ${(index + 1) % 3 === 0 || index + 1 === typeEffectivenesses.weaknesses.size ? '</div>' : ''}
+      ${(index + 1) % 3 === 0 || index + 1 === typeEffectivenesses.weaknesses.length ? '</div>' : ''}
 	  `;
     })
     .join('');
 
-  const resistanceContainer = [...typeEffectivenesses.resistances]
+  const resistanceContainer = typeEffectivenesses.resistances
     .map((value, index) => {
       const type = TYPES[value.toUpperCase() as keyof typeof TYPES];
 
       return `
       ${(index + 1) % 3 === 1 ? '<div>' : ''}
         <div class="type-icon" style="background-image: url('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-viii/sword-shield/${type}.png')"></div>
-      ${(index + 1) % 3 === 0 || index + 1 === typeEffectivenesses.resistances.size ? '</div>' : ''}
+      ${(index + 1) % 3 === 0 || index + 1 === typeEffectivenesses.resistances.length ? '</div>' : ''}
 	  `;
     })
     .join('');
-  const immunityContainer = [...typeEffectivenesses.immunities]
+  const immunityContainer = typeEffectivenesses.immunities
     .map((value, index) => {
       const type = TYPES[value.toUpperCase() as keyof typeof TYPES];
 
       return `
       ${(index + 1) % 3 === 1 ? '<div>' : ''}
         <div class="type-icon" style="background-image: url('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-viii/sword-shield/${type}.png')"></div>
-      ${(index + 1) % 3 === 0 || index + 1 === typeEffectivenesses.immunities.size ? '</div>' : ''}
+      ${(index + 1) % 3 === 0 || index + 1 === typeEffectivenesses.immunities.length ? '</div>' : ''}
 	  `;
     })
     .join('');
@@ -250,7 +251,7 @@ export let _currentEnemyPage: number = 0;
 export let _currentAllyPage: number = 0;
 let _enemiesPokemon: FrontendPokemon[] = [];
 let _alliesPokemon: FrontendPokemon[] = [];
-let _weather: FrontendWeather;
+let _weather: Weather | undefined;
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class HttpUtils {
@@ -266,7 +267,7 @@ export class HttpUtils {
       }
     }
     _weather = message.weather;
-    if (_weather.turnsLeft === 0) {
+    if (_weather && _weather.turnsLeft === 0) {
       _weather.turnsLeft = 0;
     }
   }

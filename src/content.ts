@@ -7,7 +7,7 @@ import UpdateEnemiesDivMessage from './messaging/update_enemies_div_message';
 import {browserApi} from './libs/browser';
 
 // RogueDex is running! 렌더링
-HttpUtils.createTopBannerDiv();
+// HttpUtils.createTopBannerDiv();
 HttpUtils.createWrapperDivs();
 
 chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
