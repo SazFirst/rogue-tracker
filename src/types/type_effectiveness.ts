@@ -1,3 +1,4 @@
+import {TypeRelations} from '../../node_modules/pokenode-ts/lib/index';
 import {pokeApi} from '../libs/pokeapi';
 
 // TODO string 대신 keyof typeof TYPE으로 변경
@@ -10,7 +11,7 @@ export interface TypeEffectiveness {
 export async function getPokemonTypeEffectiveness(id: number): Promise<TypeEffectiveness> {
   const types = await pokeApi.getPokemonType(id);
 
-  const typeEffectiveness = await Promise.all(types.map(type => pokeApi.getTypeEffectiveness(type)));
+  const typeEffectiveness: TypeRelations[] = await Promise.all(types.map(type => pokeApi.getTypeEffectiveness(type)));
 
   const weaknesses = new Set<string>();
   const resistances = new Set<string>();

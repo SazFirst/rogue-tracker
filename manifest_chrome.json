@@ -5,19 +5,19 @@
   "permissions": ["activeTab", "webRequest"],
   "host_permissions": ["https://pokerogue.net/*", "https://api.pokerogue.net/*"],
   "background": {
-    "service_worker": "background.js",
-    "type": "module"
+    "type": "module",
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
       "matches": ["https://api.pokerogue.net/*", "https://pokerogue.net/*"],
-      "js": ["inject.js", "lib/lodash.js"],
+      "js": ["inject.js"],
       "run_at": "document_start",
       "all_frames": true
     },
     {
       "matches": ["https://pokerogue.net/*"],
-      "js": ["content.js", "lib/crypto-js.min.js"],
+      "js": ["content.js"],
       "css": ["styles.css"]
     },
     {
@@ -28,9 +28,15 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["inject.js", "injected.js"],
+      "resources": ["inject.js", "content.js", "injected.js"],
       "matches": ["<all_urls>"],
+      "use_dynamic_url": true,
       "extension_ids": []
+    },
+    {
+      "resources": ["content.js"],
+      "matches": ["<all_urls>"],
+      "use_dynamic_url": true
     }
   ]
 }

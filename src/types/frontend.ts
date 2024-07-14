@@ -1,10 +1,10 @@
 import {Ability, pokeApi} from '../libs/pokeapi';
 import {TypeEffectiveness, getPokemonTypeEffectiveness} from './type_effectiveness';
 
-import {Nature} from '../pokerogue/data/nature';
-import PokemonData from '../pokerogue/system/pokemon-data';
-import {Utils} from '../libs/utils';
+import {Nature} from 'pokerogue';
+import PokemonData from 'pokerogue/system/pokemon-data';
 import {natureDescription} from '../libs/pokerogueutils';
+import {Utils} from '../libs/utils';
 
 export interface FrontendPokemon {
   id: number;

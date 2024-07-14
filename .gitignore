@@ -5,3 +5,4 @@ python-env
 build
 .vscode
 dist
+temp

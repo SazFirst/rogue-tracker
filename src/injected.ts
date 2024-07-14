@@ -1,48 +1,43 @@
-// This is a hack because in background.js we cannot read web request response's body.
-// When we need to do that, we intercept the web request here, and send a message to background.js with the response data, elaborate there and send back to content.js
-// (function (xhr) {
-//   const XHR = XMLHttpRequest.prototype;
+// import BattleScene from './pokerogue/battle-scene';
 
-//   const open = XHR.open;
-//   const send = XHR.send;
+// const touchControlsElement = document.getElementById('touchControls');
+// console.log(touchControlsElement);
+// if (touchControlsElement) {
+//   const observer = new MutationObserver(mutations => {
+//     mutations.forEach(async () => {
+//       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//       const _window = window as any;
+//       const battleScene = _window.Phaser.Display.Canvas.CanvasPool.pool[1].parent.scene as BattleScene;
+//       // console.log(battleScene.currentBattle.seenEnemyPartyMemberIds.)
+//       battleScene.currentBattle.enemyParty.forEach(pokemon => {
+//         console.log('enemy partymember: ', pokemon.id);
+//       });
+//       battleScene.currentBattle.seenEnemyPartyMemberIds.forEach(memberId => {
+//         console.log('seenEnemyPartyMemberId: ', memberId);
+//       });
+//       battleScene.pushPhase = function (phase: any, defer: boolean) {
+//         interceptPhase(phase);
+//         originalPushPhase.call(this, phase, defer);
+//       }.bind(battleScene);
 
-//   XHR.open = function (method, url): void {
-//     this._method = method;
-//     this._url = url;
-//     return open.apply(this, arguments);
-//   };
+//       battleScene.unshiftPhase = function (phase: any) {
+//         interceptPhase(phase);
+//         originalUnshiftPhase.call(this, phase);
+//       }.bind(battleScene);
 
-//   XHR.send = function (postData) {
-//     //console.log('injected script xhr request:', this._method, this._url, this.getAllResponseHeaders(), postData);
-//     this.addEventListener('load', () => {
-//       //window.postMessage({ type: 'xhr', data: this.response }, '*');  // send to content script
+//       battleScene.overridePhase = function (phase: any) {
+//         interceptPhase(phase);
+//         originalOverridePhase.call(this, phase);
+//       }.bind(battleScene);
+
+//       battleScene.tryReplacePhase = function (phase: any) {
+//         interceptPhase(phase);
+//         originalTryReplacePhase.call(this, phase);
+//       }.bind(battleScene);
+//       LoaderData.setData("phaseHooksDone", true, false);
+//     }
 //     });
-//     return send.apply(this, arguments);
-//   };
-// })(XMLHttpRequest);
+//   });
 
-const {fetch: origFetch} = window;
-window.fetch = async (...args): Promise<Response> => {
-  const response = await origFetch(...args);
-  if (
-    !response.url.includes('api.pokerogue.net/savedata/session?slot') &&
-    !response.url.includes('api.pokerogue.net/savedata/updateall')
-  )
-    return response;
-
-  const sessionSlotRegex = /.*\/session\?slot=(\d+).*/;
-  let slotId = -1;
-  const parsedSlotId = sessionSlotRegex.exec(response.url);
-  if (parsedSlotId) {
-    slotId = parseInt(parsedSlotId[1]);
-  }
-  response
-    .clone()
-    .json() // maybe json(), text(), blob()
-    .then(data => {
-      window.postMessage({type: 'GET_SAVEDATA', data: data, slotId: slotId}, '*'); // send to content script
-      //window.postMessage({ type: 'fetch', data: URL.createObjectURL(data) }, '*'); // if a big media file, can createObjectURL before send to content script
-    })
-    .catch(err => console.error(err));
-  return response;
-};
+//   observer.observe(touchControlsElement, {attributes: true});
+// }

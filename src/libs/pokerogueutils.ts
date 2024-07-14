@@ -1,6 +1,4 @@
-import {Nature, getNatureStatMultiplier} from '../pokerogue/data/nature';
-
-import {Stat} from '../pokerogue/data/pokemon-stat';
+import {Nature, Stat, getNatureStatMultiplier} from 'pokerogue';
 
 const natureDescription: Record<Nature, string> = {} as Record<Nature, string>;
 

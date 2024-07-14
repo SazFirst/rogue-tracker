@@ -1,7 +1,4 @@
-import {Weather, WeatherType} from './pokerogue/data/weather';
-
 import {FrontendPokemon} from './types/frontend';
-import {Stat} from './pokerogue/data/pokemon-stat';
 
 const sideBar = document.createElement('div');
 
@@ -57,10 +54,10 @@ function asdf(): void {
     typeEffectiveness: {immunities: ['무효'], resistances: ['강점'], weaknesses: ['약점']},
   };
   const pokemonImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`;
-  const _weather: Weather = {
-    turnsLeft: 1,
-    weatherType: WeatherType.NONE,
-  };
+  // const _weather: Weather = {
+  //   turnsLeft: 1,
+  //   weatherType: WeatherType.NONE,
+  // };
 
   const cardHTML = `
   <div class="pokemon-cards">
@@ -93,11 +90,6 @@ function asdf(): void {
         SPE: ${pokemon.ivs[Stat['SPD']]}, SPD: ${pokemon.ivs[Stat['SPDEF']]}, SPA: ${pokemon.ivs[Stat['SPATK']]}
       </div>
         
-      ${
-        _weather && WeatherType[_weather.weatherType] && _weather.turnsLeft
-          ? `<div class="text-base">_weather: ${WeatherType[_weather.weatherType]}, Turns Left: ${_weather.turnsLeft}</div>`
-          : ''
-      }
     </div>
   </div>
 `;

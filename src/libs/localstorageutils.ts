@@ -1,4 +1,5 @@
-import {SessionSaveData} from '../pokerogue/system/game-data';
+import {AES, enc} from 'crypto-js';
+import {SessionSaveData} from 'pokerogue/system/game-data';
 
 const saveKey = 'x0i2O7WRiANTqPmZ';
 let currentSessionData = '';
@@ -14,9 +15,12 @@ export class LocalStorageUtils {
         if (data) {
           currentSessionData = data;
         }
+
+        return true;
       }
+      return false;
     });
-    return JSON.parse(CryptoJS.AES.decrypt(currentSessionData, saveKey).toString(CryptoJS.enc.Utf8));
+    return JSON.parse(AES.decrypt(currentSessionData, saveKey).toString(enc.Utf8));
   }
 
   static cleanSessionData(): boolean {

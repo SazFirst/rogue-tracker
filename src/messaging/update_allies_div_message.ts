@@ -1,7 +1,7 @@
+import {Weather} from 'pokerogue/data/weather';
 import {FrontendPokemon} from '../types/frontend';
 import Message from './message';
 import MessageId from './message_id';
-import {Weather} from '../pokerogue/data/weather';
 
 export default class UpdateAlliesDivMessage extends Message {
   type: string;

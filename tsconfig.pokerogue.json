@@ -1,0 +1,22 @@
+{
+  "include": ["./pokerogue/src/**/*.ts"],
+  "compilerOptions": {
+    // "outFile": "lib/pokerogue/index.d.ts",
+    "rootDir": "./pokerogue",
+    "declaration": true,
+    "declarationDir": "temp",
+    "emitDeclarationOnly": true,
+    "baseUrl": "./pokerogue/src",
+    "paths": {
+      "#enums/*": ["enums/*.ts"],
+      "#app/*": ["*.ts"],
+      "#app": ["."],
+      "#test/*": ["./test/*.ts"]
+    },
+    "esModuleInterop": true,
+    "plugins": [
+      {"transform": "typescript-transform-paths"},
+      {"transform": "typescript-transform-paths", "afterDeclarations": true}
+    ]
+  }
+}

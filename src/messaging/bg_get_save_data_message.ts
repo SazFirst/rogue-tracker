@@ -1,6 +1,6 @@
+import {SessionSaveData} from 'pokerogue';
 import Message from './message';
 import MessageId from './message_id';
-import {SessionSaveData} from '../pokerogue/system/game-data';
 
 export default class BGGetSaveDataMessage extends Message {
   type: string;

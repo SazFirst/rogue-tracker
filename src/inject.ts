@@ -1,5 +1,5 @@
-import BGGetSaveDataMessage from './messaging/bg_get_save_data_message';
 import {browserApi} from './libs/browser';
+import BGGetSaveDataMessage from './messaging/bg_get_save_data_message';
 
 console.log('content script start');
 

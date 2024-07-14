@@ -1,10 +1,9 @@
-import {SessionSaveData, SystemSaveData} from './pokerogue/system/game-data';
-
+import {SessionSaveData, SystemSaveData} from 'pokerogue/system/game-data';
+import {browserApi} from './libs/browser';
 import BGGetSaveDataMessage from './messaging/bg_get_save_data_message';
 import Message from './messaging/message';
 import UpdateAlliesDivMessage from './messaging/update_allies_div_message';
 import UpdateEnemiesDivMessage from './messaging/update_enemies_div_message';
-import {browserApi} from './libs/browser';
 import {convertToFrontendPokemons} from './types/frontend';
 
 // const browserApi = window.browser ?? window.chrome;

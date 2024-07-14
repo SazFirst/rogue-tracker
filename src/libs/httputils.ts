@@ -1,13 +1,11 @@
 import * as _ from 'lodash';
 
-import {Weather, WeatherType} from '../pokerogue/data/weather';
-
-import {FrontendPokemon} from '../types/frontend';
-import {Stat} from '../pokerogue/data/pokemon-stat';
 import {TYPES} from 'pokenode-ts';
-import {TypeEffectiveness} from '../types/type_effectiveness';
+import {Stat, Weather, WeatherType} from 'pokerogue';
 import UpdateAlliesDivMessage from '../messaging/update_allies_div_message';
 import UpdateEnemiesDivMessage from '../messaging/update_enemies_div_message';
+import {FrontendPokemon} from '../types/frontend';
+import {TypeEffectiveness} from '../types/type_effectiveness';
 
 function _createPokemonCardDiv(
   cardclass: string,
@@ -328,6 +326,12 @@ export class HttpUtils {
         div.className = `${divId}-team`;
         div.id = divId;
         _enableDragElement(div);
+        div.addEventListener('click', (): void => {
+          console.log('으아아 test', window);
+        });
+        div.onkeydown = (): void => {
+          console.log('으아아 test', window);
+        };
         document.body.appendChild(div);
       });
     } catch (e) {
